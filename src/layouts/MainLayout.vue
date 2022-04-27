@@ -6,6 +6,8 @@
         <q-toolbar-title>
           제노플랙스 명함 제조기
         </q-toolbar-title>
+        <q-space />
+        <span class="text-body2 text-weight-bold">v{{version}}</span>
       </q-toolbar>
     </q-header>
 
@@ -18,6 +20,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { version } from 'app/package.json'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -25,7 +28,7 @@ export default defineComponent({
   setup () {
 
     return {
-      
+      version
     }
   }
 });
