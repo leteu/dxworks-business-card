@@ -196,7 +196,7 @@
                 >
                   M. <a
                     :href="`tel:${telNum}`"
-                    style="color: #fff; text-decoration: none"
+                    style="color: #32425f; text-decoration: none"
                     >{{ telNum }}</a
                   >
                 </p>
@@ -211,7 +211,7 @@
                 >
                   E. <a
                     :href="`mailto:${email}@xenoplex.kr`"
-                    style="color: #fff; text-decoration: none"
+                    style="color: #32425f; text-decoration: none"
                     >{{ email }}@xenoplex.kr</a
                   >
                 </p>
@@ -259,9 +259,20 @@
                     margin-bottom: 0px;
                   "
                 >
-                  <span style="font-size: 13px"
-                    >T. 070-8656-0670&nbsp;| E. contact@xenoplex.kr&nbsp;</span
-                  ><span style="font-size: 14px">| xenoplex.co.kr</span>
+                  <span style="font-size: 13px">
+                    T. <a
+                      href="tel:070-8658-0670"
+                      style="color: #32425f; text-decoration: none"
+                      >070-8656-0670</a
+                    > | E. <a
+                      href="mailto:contact@xenoplex.kr"
+                      style="color: #32425f; text-decoration: none"
+                      >contact@xenoplex.kr</a
+                    > | <a
+                      href="xenoplex.co.kr"
+                      style="color: #32425f; text-decoration: none"
+                      >xenoplex.co.kr</a>
+                  </span>
                 </p>
               </div>
             </div>
