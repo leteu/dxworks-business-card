@@ -85,6 +85,8 @@
               style="
                 width: 430px;
                 height: 240px;
+                min-width: 430px;
+                min-height: 240px;
                 background-color: #32425f;
                 position: relative;
                 display: flex;
@@ -123,6 +125,8 @@
                 border-bottom: 10px solid #32425f;
                 width: 430px;
                 height: 240px;
+                min-width: 430px;
+                min-height: 240px;
                 display: flex;
                 flex-wrap: wrap;
                 -ms-flex-wrap: wrap;
