@@ -80,7 +80,7 @@
         <q-card-section class="text-h6"> 미리보기 </q-card-section>
         <q-separator />
         <q-card-section id="preview">
-          <div style="display: flex; gap: 5px">
+          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
             <div
               style="
                 width: 430px;
