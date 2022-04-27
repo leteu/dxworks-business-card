@@ -112,9 +112,22 @@
                     margin-top: 0px;
                     margin-bottom: 0px;
                     font-family: '맑은 고딕';
+                    text-decoration: none;
                   "
                 >
-                  T. 070-8656-0670 | E. contact@xenoplex.kr | xenoplex.co.kr
+                  T. <a
+                    href="tel:070-8658-0670"
+                    style="color: #fff; text-decoration: none"
+                    >070-8656-0670</a
+                  > | E. <a
+                    href="mailto:contact@xenoplex.kr"
+                    style="color: #fff; text-decoration: none"
+                    >contact@xenoplex.kr</a
+                  > | <a
+                    href="xenoplex.co.kr"
+                    style="color: #fff; text-decoration: none"
+                    >xenoplex.co.kr</a
+                  >
                 </p>
               </div>
             </div>
@@ -181,7 +194,11 @@
                     margin-top: 7px;
                   "
                 >
-                  M. {{ telNum }}
+                  M. <a
+                    :href="`tel:${telNum}`"
+                    style="color: #fff; text-decoration: none"
+                    >{{ telNum }}</a
+                  >
                 </p>
                 <p
                   style="
@@ -192,7 +209,11 @@
                     margin-top: 3px;
                   "
                 >
-                  E. {{ email }}@xenoplex.kr
+                  E. <a
+                    :href="`mailto:${email}@xenoplex.kr`"
+                    style="color: #fff; text-decoration: none"
+                    >{{ email }}@xenoplex.kr</a
+                  >
                 </p>
               </div>
               <div style="width: 100%; align-self: end">
