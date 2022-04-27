@@ -1,9 +1,9 @@
 <template>
-  <q-page class="row items-center justify-evenly q-gutter-x-md q-pa-xl bg-grey-4">
+  <q-page
+    class="row items-center justify-evenly q-gutter-x-md q-pa-xl bg-grey-4"
+  >
     <q-card>
-      <q-card-section class="text-h6">
-        정보 입력 폼
-      </q-card-section>
+      <q-card-section class="text-h6"> 정보 입력 폼 </q-card-section>
       <q-separator />
       <q-card-section class="q-gutter-y-sm">
         <div class="relative-position col">
@@ -14,7 +14,7 @@
             outlined
             v-model="krName"
             placeholder="ex) 신규현"
-            :rules="[val => !!val && !!val.trim() || '']"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
@@ -27,7 +27,7 @@
             outlined
             v-model="enName"
             placeholder="ex) Tom Shin"
-            :rules="[val => !!val && !!val.trim() || '']"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
@@ -40,7 +40,7 @@
             outlined
             v-model="desc"
             placeholder="ex) Software Development Engineer"
-            :rules="[val => !!val && !!val.trim() || '']"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
@@ -53,7 +53,7 @@
             outlined
             v-model="telNum"
             placeholder="ex) 010-8905-7546"
-            :rules="[val => !!val && !!val.trim() || '']"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
@@ -66,7 +66,7 @@
             outlined
             v-model="email"
             placeholder="ex) tom.shin"
-            :rules="[val => !!val && !!val.trim() || '']"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
             suffix="@xenoplex.kr"
@@ -80,7 +80,7 @@
         <q-card-section class="text-h6"> 미리보기 </q-card-section>
         <q-separator />
         <q-card-section id="preview">
-          <div style="display: flex; gap: 5px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 5px; flex-wrap: wrap">
             <div
               style="
                 width: 430px;
@@ -156,7 +156,14 @@
                     margin-bottom: 5px;
                   "
                 />
-                <p style="font-size: 13px; margin-top: 0px; margin-bottom: 0px; font-family: '맑은 고딕';">
+                <p
+                  style="
+                    font-size: 13px;
+                    margin-top: 0px;
+                    margin-bottom: 0px;
+                    font-family: '맑은 고딕';
+                  "
+                >
                   {{ desc }}
                 </p>
               </div>
@@ -239,9 +246,7 @@
 
       <q-card class="col">
         <q-card-section class="flex justify-between items-center">
-          <span class="text-h6">
-            경량화 코드
-          </span>
+          <span class="text-h6"> 경량화 코드 </span>
           <q-icon
             class="q-field__focusable-action"
             type="button"
@@ -253,17 +258,12 @@
             v-if="hasClipboard"
             @click="copyCodeToClip"
           >
-            <q-tooltip class="text-body1">
-              클립보드에 복사
-            </q-tooltip>
+            <q-tooltip class="text-body1"> 클립보드에 복사 </q-tooltip>
           </q-icon>
         </q-card-section>
         <q-separator />
         <q-card-section class="q-py-xs">
-          <highlightjs
-            language="html"
-            :code="minifyCode"
-          />
+          <highlightjs language="html" :code="minifyCode" />
         </q-card-section>
       </q-card>
     </div>
@@ -272,8 +272,8 @@
 
 <script lang="ts">
 import { defineComponent, ref, watch, onMounted } from "vue";
-import IMEInput from 'src/components/IME/IMEInput';
-import 'highlight.js/lib/common';
+import IMEInput from "src/components/IME/IMEInput";
+import "highlight.js/lib/common";
 import hljsVuePlugin from "@highlightjs/vue-plugin";
 import { useQuasar } from "quasar";
 // const minify = require('html-minifier').minify;
@@ -282,41 +282,42 @@ export default defineComponent({
   name: "IndexPage",
   components: {
     IMEInput,
-    highlightjs: hljsVuePlugin.component
+    highlightjs: hljsVuePlugin.component,
   },
   setup() {
     const $q = useQuasar();
 
-    const krName = ref('신규현');
-    const enName = ref('Tom Shin');
-    const desc = ref('Software Development Engineer');
-    const telNum = ref('010-8905-7546');
-    const email = ref('tom.shin');
+    const krName = ref("신규현");
+    const enName = ref("Tom Shin");
+    const desc = ref("Software Development Engineer");
+    const telNum = ref("010-8905-7546");
+    const email = ref("tom.shin");
 
-    const minifyCode = ref('');
+    const minifyCode = ref("");
 
     const hasClipboard = ref(!!navigator.clipboard);
 
     function updateCode() {
-      minifyCode.value = document.getElementById('preview')?.innerHTML||'';
+      minifyCode.value = document.getElementById("preview")?.innerHTML || "";
     }
 
     function copyCodeToClip() {
-      navigator.clipboard.writeText(minifyCode.value)
+      navigator.clipboard
+        .writeText(minifyCode.value)
         .then(() => {
           $q.notify({
-            message: '복사 성공!!',
-            color: 'green',
-            icon: 'done_all'
-          })
+            message: "복사 성공!!",
+            color: "green",
+            icon: "done_all",
+          });
         })
         .catch(() => {
           $q.notify({
-            message: '복사 실패!! 반복적으로 실패 시 담당자에게 문의해주세요.',
-            color: 'red',
-            icon: 'sentiment_very_dissatisfied'
-          })
-        })
+            message: "복사 실패!! 반복적으로 실패 시 담당자에게 문의해주세요.",
+            color: "red",
+            icon: "sentiment_very_dissatisfied",
+          });
+        });
     }
 
     onMounted(() => {
@@ -329,7 +330,7 @@ export default defineComponent({
         updateCode();
       },
       {
-        deep: true
+        deep: true,
       }
     );
 
