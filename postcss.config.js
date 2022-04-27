@@ -3,6 +3,9 @@
 
 module.exports = {
   plugins: [
+    require('postcss-nested'),
+    require('postcss-simple-vars'),
+    require('postcss-for'),
     // https://github.com/postcss/autoprefixer
     require('autoprefixer')({
       overrideBrowserslist: [
