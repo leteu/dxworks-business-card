@@ -9,7 +9,9 @@
     "test": "echo \"No test specified\" && exit 0"
   },
   "dependencies": {
+    "@highlightjs/vue-plugin": "^2.1.0",
     "@quasar/extras": "^1.0.0",
+    "highlight.js": "^11.5.1",
     "quasar": "^2.6.0",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0"
@@ -17,6 +19,7 @@
   "devDependencies": {
     "@types/node": "^12.20.21",
     "@quasar/app-vite": "^1.0.0-alpha.0",
+    "@types/highlight.js": "^10.1.0",
     "autoprefixer": "^10.4.2",
     "postcss-for": "^2.1.1",
     "postcss-nested": "^5.0.6",
