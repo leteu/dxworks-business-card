@@ -124,7 +124,7 @@
                     style="color: #fff; text-decoration: none"
                     >contact@xenoplex.kr</a
                   > | <a
-                    href="xenoplex.co.kr"
+                    href="https://xenoplex.co.kr"
                     style="color: #fff; text-decoration: none"
                     >xenoplex.co.kr</a
                   >
@@ -269,7 +269,7 @@
                       style="color: #32425f; text-decoration: none"
                       >contact@xenoplex.kr</a
                     > | <a
-                      href="xenoplex.co.kr"
+                      href="https://xenoplex.co.kr"
                       style="color: #32425f; text-decoration: none"
                       >xenoplex.co.kr</a>
                   </span>
