@@ -46,6 +46,19 @@
           />
         </div>
         <div class="relative-position col">
+          <div class="text-bold small-font q-pl-xs">소속</div>
+          <q-input
+            dense
+            square
+            outlined
+            v-model="part"
+            placeholder="ex) DX Division"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
+            hide-bottom-space
+            class="hideErrorMessageSlot"
+          />
+        </div>
+        <div class="relative-position col">
           <div class="text-bold small-font q-pl-xs">전화번호</div>
           <q-input
             dense
@@ -115,18 +128,14 @@
                     text-decoration: none;
                   "
                 >
-                  T. <a
-                    href="tel:070-8658-0670"
-                    style="color: #fff; text-decoration: none"
-                    >070-8656-0670</a
-                  > | E. <a
+                  E. <a
                     href="mailto:contact@xenoplex.kr"
                     style="color: #fff; text-decoration: none"
                     >contact@xenoplex.kr</a
                   > | <a
                     href="https://xenoplex.co.kr"
                     style="color: #fff; text-decoration: none"
-                    >xenoplex.co.kr</a
+                    >www.xenoplex.co.kr</a
                   >
                 </p>
               </div>
@@ -183,6 +192,16 @@
                 >
                   {{ desc }}
                 </p>
+                <p
+                  style="
+                    font-size: 13px;
+                    margin-top: 0px;
+                    margin-bottom: 0px;
+                    font-family: '맑은 고딕';
+                  "
+                >
+                  {{ part }}
+                </p>
               </div>
               <div style="margin-left: 10px">
                 <p
@@ -237,7 +256,7 @@
                     margin-bottom: 0px;
                   "
                 >
-                  <b>본사</b>. 대구광역시 동구 경대로 36, 무지개빌딩 6층
+                  대구광역시 동구 경대로 36, 무지개빌딩 6층
                 </p>
                 <p
                   style="
@@ -248,7 +267,7 @@
                     margin-bottom: 0px;
                   "
                 >
-                  <b>플랫폼센터</b>. 서울특별시 송파구 정의로 70 KDU타워 705호
+                  서울특별시 송파구 정의로 70 KDU타워 705호
                 </p>
                 <p
                   style="
@@ -282,7 +301,7 @@
 
       <q-card class="col">
         <q-card-section class="flex justify-between items-center">
-          <span class="text-h6"> 경량화 코드 </span>
+          <span class="text-h6"> 경량화 코드</span>
           <q-icon
             class="q-field__focusable-action"
             type="button"
@@ -326,6 +345,7 @@ export default defineComponent({
     const krName = ref("신규현");
     const enName = ref("Tom Shin");
     const desc = ref("Software Development Engineer");
+    const part = ref("DX Division");
     const telNum = ref("010-8905-7546");
     const email = ref("tom.shin");
 
@@ -374,6 +394,7 @@ export default defineComponent({
       krName,
       enName,
       desc,
+      part,
       telNum,
       email,
       minifyCode,
@@ -397,3 +418,4 @@ export default defineComponent({
   max-height: 300px
   overflow-y: auto
 </style>
+
