@@ -1,8 +1,8 @@
 {
-  "name": "xenoplex-card",
+  "name": "dxworks-business-card",
   "version": "1.1.0",
-  "description": "auto creating xenoplex business card",
-  "productName": "xenoplex-card",
+  "description": "auto creating dxworks business card",
+  "productName": "dxworks-business-card",
   "author": "ghshin <leteu610@gmail.com>",
   "private": true,
   "scripts": {
