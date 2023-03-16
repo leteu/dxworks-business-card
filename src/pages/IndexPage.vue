@@ -8,18 +8,17 @@
       <q-card-section class="q-gutter-y-sm">
         <div class="relative-position col">
           <div class="text-bold small-font q-pl-xs">한글 이름</div>
-          <IMEInput
+          <q-input
             dense
             square
             outlined
             v-model="krName"
             placeholder="ex) 신규현"
-            :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
         </div>
-        <div class="relative-position col">
+        <!-- <div class="relative-position col">
           <div class="text-bold small-font q-pl-xs">영어 이름</div>
           <q-input
             dense
@@ -31,15 +30,28 @@
             hide-bottom-space
             class="hideErrorMessageSlot"
           />
-        </div>
+        </div> -->
         <div class="relative-position col">
-          <div class="text-bold small-font q-pl-xs">설명글</div>
+          <div class="text-bold small-font q-pl-xs">직책</div>
           <q-input
             dense
             square
             outlined
             v-model="desc"
             placeholder="ex) Software Development Engineer"
+            :rules="[(val) => (!!val && !!val.trim()) || '']"
+            hide-bottom-space
+            class="hideErrorMessageSlot"
+          />
+        </div>
+        <div class="relative-position col">
+          <div class="text-bold small-font q-pl-xs">소속</div>
+          <q-input
+            dense
+            square
+            outlined
+            v-model="part"
+            placeholder="ex) DX Division"
             :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
@@ -69,8 +81,13 @@
             :rules="[(val) => (!!val && !!val.trim()) || '']"
             hide-bottom-space
             class="hideErrorMessageSlot"
-            suffix="@xenoplex.kr"
+            suffix="@dxworks.kr"
           />
+        </div>
+        <div class="relative-position col">
+          <div class="text-bold small-font q-pl-xs">사무실 전화번호 : {{ officeCall }}</div>
+          <q-radio v-model="officeCall" val="070-8846-9136" label="서울" />
+          <q-radio v-model="officeCall" val="070-8656-0670" label="대구" />
         </div>
       </q-card-section>
     </q-card>
@@ -80,209 +97,302 @@
         <q-card-section class="text-h6"> 미리보기 </q-card-section>
         <q-separator />
         <q-card-section id="preview">
-          <div style="display: flex; gap: 5px; flex-wrap: wrap">
-            <div
-              style="
-                width: 430px;
-                height: 240px;
-                min-width: 430px;
-                min-height: 240px;
-                background-color: #32425f;
-                position: relative;
-                display: flex;
-                flex-wrap: wrap;
-                -ms-flex-wrap: wrap;
-                align-items: center;
-                justify-content: center;
-              "
-            >
-              <div>
-                <img
-                  src="data:image/png;base64,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"
-                  alt=""
-                  style="width: 100%"
-                />
-              </div>
-              <div style="width: 100%; text-align: center">
-                <p
-                  style="
-                    color: #ffffff;
-                    font-size: 14px;
-                    font-weight: bold;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                    font-family: '맑은 고딕';
-                    text-decoration: none;
-                  "
+          <div
+            style="
+              float: left;
+              width: 100%;
+              border-top: 2px solid #000;
+              font-size: 14px;
+            "
+          >
+            <div>
+              <p
+                style="
+                  float: left;
+                  border-bottom: 1px solid #ccc;
+                  line-height: 3;
+                "
+              >
+                <span style="font-size: 18px; font-weight: bold;">{{ krName }}</span>&nbsp;
+                <span
+                  style="font-weight: bold; line-height: 14px; margin-top: 4px"
                 >
-                  T. <a
-                    href="tel:070-8658-0670"
-                    style="color: #fff; text-decoration: none"
-                    >070-8656-0670</a
-                  > | E. <a
-                    href="mailto:contact@xenoplex.kr"
-                    style="color: #fff; text-decoration: none"
-                    >contact@xenoplex.kr</a
-                  > | <a
-                    href="https://xenoplex.co.kr"
-                    style="color: #fff; text-decoration: none"
-                    >xenoplex.co.kr</a
-                  >
-                </p>
+                  {{ desc }}</span
+                >
+              </p>
+              <div style="float: right; width: 120px; padding: 15px">
+                <svg
+                  version="1.1"
+                  id="Layer_1"
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  x="0px"
+                  y="0px"
+                  viewBox="0 0 528.71 104.39"
+                  style="enable-background: new 0 0 528.71 104.39"
+                  xml:space="preserve"
+                >
+                  <g>
+                    <path
+                      style="fill: #0d0a21"
+                      d="M197.25,39.02h14.64L222.78,83h0.54l11.88-43.97h12.59l11.87,44.06h0.54l10.89-44.06h14.65l-18.48,62.92
+		h-13.13L241.8,60.4h-0.54l-12.41,41.54h-13.13L197.25,39.02z"
+                    />
+                    <path
+                      style="fill: #0d0a21"
+                      d="M321.63,102.81c-17.24,0-30.27-11.86-30.27-32.33c0-20.55,13.03-32.33,30.27-32.33
+		c17.09,0,30.18,11.77,30.18,32.33S338.73,102.81,321.63,102.81z M321.63,91.25c9.95-0.05,16.56-7.35,16.51-20.77
+		c0.05-13.47-6.56-20.73-16.51-20.77c-10.05,0.04-16.61,7.3-16.61,20.77C305.03,83.91,311.58,91.21,321.63,91.25z"
+                    />
+                    <path
+                      style="fill: #0d0a21"
+                      d="M361.46,39.02h25.36c14.69,0,23.13,8.04,23.13,20.51c0,8.6-4.06,14.86-11.43,17.94l13.75,24.46h-14.82
+		l-12.36-22.33h-10.22v22.33h-13.39V39.02z M384.32,69.01c7.95,0,11.83-3.17,11.78-9.47c0.04-6.34-3.84-9.78-11.78-9.82h-9.46v19.3
+		H384.32z"
+                    />
+                    <path
+                      style="fill: #0d0a21"
+                      d="M419.24,39.02h13.39v27.89h0.89l23.48-27.89h16.16l-24.11,28.16l24.38,34.76h-16.08l-17.94-25.98l-6.79,7.99
+		v17.99h-13.39V39.02z"
+                    />
+                    <path
+                      style="fill: #0d0a21"
+                      d="M503.8,49.1c-6.79,0-10.58,3.04-10.62,7.21c-0.05,4.56,4.77,6.61,10.36,7.82l5.8,1.39
+		c11.07,2.48,19.33,7.95,19.38,18.42c-0.04,11.52-9.24,18.9-25,18.86c-15.63,0.04-25.58-7-25.98-20.51h13.03
+		c0.45,6.34,5.63,9.56,12.77,9.56c7.05,0,11.61-3.22,11.61-7.91c0-4.3-4.02-6.3-11.07-7.99l-7.05-1.65
+		c-10.89-2.61-17.59-7.91-17.59-17.12c-0.04-11.43,10.32-19.03,24.47-19.03c14.33,0,23.75,7.73,23.93,18.85h-12.86
+		C514.42,52.01,510.36,49.1,503.8,49.1z"
+                    />
+                    <g>
+                      <linearGradient
+                        id="SVGID_1_"
+                        gradientUnits="userSpaceOnUse"
+                        x1="138.7289"
+                        y1="24.487"
+                        x2="188.4932"
+                        y2="24.487"
+                      >
+                        <stop offset="0.0473" style="stop-color: #343293" />
+                        <stop offset="1" style="stop-color: #32298f" />
+                      </linearGradient>
+                      <path
+                        style="fill: url(#SVGID_1_)"
+                        d="M152.85,48.97c-0.33,0-0.66-0.1-0.94-0.31c-0.7-0.52-0.84-1.51-0.33-2.2l32.2-43.31h-20.53l-21.7,28.39
+			c-0.53,0.69-1.52,0.82-2.21,0.29c-0.69-0.53-0.82-1.52-0.29-2.21l22.17-29.01c0.3-0.39,0.76-0.62,1.25-0.62h24.44
+			c0.6,0,1.14,0.34,1.41,0.87c0.27,0.53,0.21,1.17-0.14,1.65l-34.07,45.82C153.8,48.75,153.33,48.97,152.85,48.97z"
+                      />
+                    </g>
+                    <linearGradient
+                      id="SVGID_2_"
+                      gradientUnits="userSpaceOnUse"
+                      x1="76.9151"
+                      y1="52.2522"
+                      x2="187.6846"
+                      y2="52.2522"
+                    >
+                      <stop offset="0.2475" style="stop-color: #3c4ea1" />
+                      <stop offset="1" style="stop-color: #312a90" />
+                    </linearGradient>
+                    <polygon
+                      style="fill: url(#SVGID_2_)"
+                      points="111.22,1.57 187.68,102.93 153.7,102.93 132.46,74.47 111.22,102.48 85.67,102.48 119.3,57.15
+		76.92,1.57 	"
+                    />
+                    <g>
+                      <path
+                        style="fill: #54ba9e"
+                        d="M21.98,104.39H1.58c-0.87,0-1.58-0.71-1.58-1.58V1.58C0,0.71,0.71,0,1.58,0h20.4c0.87,0,1.58,0.71,1.58,1.58
+			c0,0.87-0.71,1.58-1.58,1.58H3.15v98.08H20.4V28.35c0-0.87,0.71-1.58,1.58-1.58c0.87,0,1.58,0.71,1.58,1.58v74.46
+			C23.55,103.68,22.85,104.39,21.98,104.39z"
+                      />
+                    </g>
+                    <linearGradient
+                      id="SVGID_3_"
+                      gradientUnits="userSpaceOnUse"
+                      x1="28.0811"
+                      y1="52.1925"
+                      x2="87.7122"
+                      y2="52.1925"
+                    >
+                      <stop offset="0" style="stop-color: #4eb2ca" />
+                      <stop offset="1" style="stop-color: #3e53a3" />
+                    </linearGradient>
+                    <path
+                      style="fill: url(#SVGID_3_)"
+                      d="M39.93,1.57H28.08v25.54h10.65c13.71,0,22.84,9.97,22.84,24.99c0,14.94-9.14,25.16-22.84,25.16H28.08v25.54
+		h11.85c27.95,0,47.78-21.16,47.78-50.7C87.71,22.53,67.95,1.57,39.93,1.57z"
+                    />
+                    <g>
+                      <path
+                        style="fill: #0d0a21"
+                        d="M362.72,11.23c0,1.39-0.22,2.6-0.65,3.62c-0.43,1.03-1.05,1.88-1.84,2.57c-0.8,0.69-1.75,1.2-2.87,1.53
+			c-1.12,0.33-2.36,0.5-3.72,0.5c-0.65,0-1.38-0.03-2.2-0.08c-0.82-0.05-1.6-0.17-2.34-0.34V3.45c0.74-0.17,1.53-0.28,2.36-0.32
+			c0.83-0.05,1.58-0.07,2.22-0.07c1.34,0,2.57,0.16,3.68,0.47s2.06,0.81,2.86,1.48c0.8,0.67,1.41,1.52,1.84,2.55
+			C362.51,8.59,362.72,9.81,362.72,11.23z M352.03,16.86c0.17,0.02,0.39,0.03,0.67,0.03c0.28,0.01,0.66,0.01,1.13,0.01
+			c1.96,0,3.42-0.5,4.39-1.49s1.45-2.39,1.45-4.18c0-1.82-0.47-3.22-1.41-4.19c-0.94-0.97-2.4-1.46-4.38-1.46
+			c-0.87,0-1.48,0.02-1.85,0.07V16.86z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M368.91,3.61c0,0.52-0.17,0.94-0.51,1.25c-0.34,0.31-0.74,0.46-1.2,0.46c-0.48,0-0.89-0.15-1.23-0.46
+			c-0.34-0.31-0.51-0.73-0.51-1.25c0-0.54,0.17-0.96,0.51-1.27c0.34-0.31,0.75-0.46,1.23-0.46c0.46,0,0.86,0.15,1.2,0.46
+			C368.74,2.65,368.91,3.07,368.91,3.61z M368.61,19.27h-2.8V7.16h2.8V19.27z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M382.18,18.04c0,1.93-0.49,3.34-1.47,4.24c-0.98,0.89-2.48,1.34-4.5,1.34c-0.74,0-1.46-0.06-2.17-0.18
+			s-1.34-0.29-1.91-0.49l0.51-2.39c0.48,0.2,1.02,0.36,1.63,0.49c0.61,0.12,1.27,0.18,1.98,0.18c1.13,0,1.93-0.23,2.41-0.69
+			c0.48-0.46,0.72-1.15,0.72-2.06v-0.46c-0.28,0.14-0.64,0.28-1.1,0.42c-0.46,0.14-0.98,0.21-1.56,0.21c-0.77,0-1.48-0.12-2.12-0.37
+			c-0.64-0.25-1.19-0.61-1.64-1.09c-0.46-0.48-0.81-1.08-1.06-1.79c-0.26-0.72-0.38-1.55-0.38-2.49c0-0.88,0.13-1.69,0.41-2.43
+			c0.27-0.74,0.66-1.37,1.18-1.9c0.52-0.52,1.15-0.93,1.89-1.23c0.74-0.29,1.58-0.44,2.52-0.44c0.91,0,1.78,0.07,2.6,0.21
+			c0.82,0.14,1.51,0.29,2.08,0.44V18.04z M374.37,12.9c0,1.19,0.26,2.06,0.77,2.6c0.52,0.55,1.19,0.82,2,0.82
+			c0.45,0,0.87-0.06,1.26-0.19c0.39-0.12,0.71-0.27,0.96-0.44V9.43c-0.2-0.05-0.45-0.09-0.74-0.13c-0.29-0.04-0.67-0.06-1.11-0.06
+			c-1.02,0-1.8,0.34-2.34,1.01C374.64,10.92,374.37,11.8,374.37,12.9z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M388.87,3.61c0,0.52-0.17,0.94-0.51,1.25c-0.34,0.31-0.74,0.46-1.2,0.46c-0.48,0-0.89-0.15-1.23-0.46
+			c-0.34-0.31-0.51-0.73-0.51-1.25c0-0.54,0.17-0.96,0.51-1.27c0.34-0.31,0.75-0.46,1.23-0.46c0.46,0,0.86,0.15,1.2,0.46
+			C388.7,2.65,388.87,3.07,388.87,3.61z M388.57,19.27h-2.8V7.16h2.8V19.27z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M392,3.96l2.8-0.46v3.66h4.31V9.5h-4.31v4.93c0,0.97,0.15,1.67,0.46,2.08c0.31,0.42,0.83,0.63,1.58,0.63
+			c0.51,0,0.96-0.05,1.35-0.16c0.39-0.11,0.71-0.21,0.94-0.3l0.46,2.22c-0.32,0.14-0.75,0.28-1.27,0.43
+			c-0.53,0.15-1.14,0.22-1.85,0.22c-0.87,0-1.59-0.12-2.17-0.35c-0.58-0.23-1.04-0.57-1.38-1.01c-0.34-0.44-0.58-0.97-0.72-1.6
+			c-0.14-0.62-0.21-1.34-0.21-2.14V3.96z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M405.85,6.85c0.93,0,1.71,0.12,2.34,0.35c0.63,0.23,1.14,0.56,1.52,0.97c0.38,0.42,0.65,0.92,0.81,1.52
+			s0.24,1.25,0.24,1.96v7.34c-0.43,0.09-1.08,0.2-1.96,0.34c-0.87,0.13-1.86,0.2-2.95,0.2c-0.73,0-1.39-0.07-1.99-0.21
+			c-0.6-0.14-1.12-0.36-1.54-0.67c-0.42-0.31-0.76-0.71-1-1.2c-0.24-0.49-0.36-1.1-0.36-1.83c0-0.69,0.13-1.28,0.41-1.76
+			c0.27-0.48,0.64-0.87,1.1-1.17c0.46-0.3,1-0.52,1.61-0.65c0.61-0.13,1.25-0.2,1.91-0.2c0.31,0,0.63,0.02,0.97,0.06
+			c0.34,0.04,0.7,0.1,1.09,0.2v-0.46c0-0.32-0.04-0.63-0.12-0.93c-0.08-0.29-0.21-0.55-0.41-0.78c-0.19-0.22-0.45-0.4-0.76-0.52
+			c-0.32-0.12-0.71-0.19-1.19-0.19c-0.65,0-1.24,0.05-1.78,0.14c-0.54,0.09-0.98,0.2-1.32,0.33l-0.35-2.27
+			c0.35-0.12,0.87-0.25,1.55-0.37C404.35,6.92,405.08,6.85,405.85,6.85z M406.08,17.3c0.87,0,1.52-0.05,1.97-0.14v-3.1
+			c-0.15-0.05-0.38-0.09-0.67-0.14c-0.29-0.05-0.62-0.07-0.97-0.07c-0.31,0-0.62,0.02-0.94,0.07c-0.32,0.05-0.6,0.13-0.86,0.25
+			c-0.25,0.12-0.46,0.3-0.61,0.52c-0.15,0.22-0.23,0.51-0.23,0.85c0,0.66,0.21,1.12,0.63,1.38C404.81,17.17,405.37,17.3,406.08,17.3
+			z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M418.4,19.5c-0.83-0.02-1.52-0.11-2.07-0.28c-0.55-0.17-0.98-0.41-1.31-0.73c-0.32-0.32-0.55-0.71-0.68-1.18
+			c-0.13-0.47-0.2-1.01-0.2-1.61V1.76l2.8-0.46v13.87c0,0.34,0.03,0.63,0.08,0.86c0.05,0.23,0.15,0.43,0.29,0.59
+			c0.14,0.16,0.33,0.29,0.57,0.37c0.24,0.09,0.54,0.15,0.91,0.2L418.4,19.5z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M426.6,3.22h2.92v16.05h-2.92V3.22z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M433.22,7.55c0.54-0.15,1.24-0.3,2.11-0.44c0.87-0.14,1.82-0.21,2.87-0.21c0.99,0,1.82,0.14,2.48,0.41
+			c0.66,0.27,1.19,0.65,1.59,1.14s0.67,1.07,0.83,1.76c0.16,0.69,0.24,1.44,0.24,2.26v6.81h-2.8V12.9c0-0.65-0.04-1.2-0.13-1.66
+			c-0.09-0.46-0.22-0.83-0.42-1.11c-0.19-0.29-0.45-0.49-0.79-0.63c-0.33-0.13-0.74-0.2-1.22-0.2c-0.36,0-0.73,0.02-1.11,0.07
+			c-0.39,0.05-0.67,0.08-0.86,0.12v9.77h-2.8V7.55z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M446.77,7.55c0.54-0.15,1.24-0.3,2.11-0.44c0.87-0.14,1.82-0.21,2.87-0.21c0.99,0,1.82,0.14,2.48,0.41
+			c0.66,0.27,1.19,0.65,1.59,1.14s0.67,1.07,0.83,1.76c0.16,0.69,0.24,1.44,0.24,2.26v6.81h-2.8V12.9c0-0.65-0.04-1.2-0.13-1.66
+			c-0.09-0.46-0.22-0.83-0.42-1.11c-0.19-0.29-0.45-0.49-0.79-0.63c-0.33-0.13-0.74-0.2-1.22-0.2c-0.36,0-0.73,0.02-1.11,0.07
+			c-0.39,0.05-0.67,0.08-0.86,0.12v9.77h-2.8V7.55z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M471.27,13.2c0,0.96-0.14,1.83-0.42,2.62c-0.28,0.79-0.67,1.46-1.18,2.01c-0.51,0.56-1.12,0.99-1.84,1.3
+			c-0.72,0.31-1.51,0.46-2.37,0.46s-1.65-0.15-2.36-0.46c-0.71-0.31-1.32-0.74-1.83-1.3s-0.91-1.23-1.19-2.01
+			c-0.29-0.79-0.43-1.66-0.43-2.62s0.14-1.83,0.43-2.61c0.29-0.78,0.69-1.45,1.2-2c0.52-0.56,1.13-0.98,1.84-1.29
+			c0.71-0.3,1.49-0.45,2.34-0.45s1.63,0.15,2.35,0.45c0.72,0.3,1.33,0.73,1.84,1.29c0.51,0.56,0.91,1.22,1.19,2
+			C471.13,11.38,471.27,12.24,471.27,13.2z M468.4,13.2c0-1.2-0.26-2.16-0.78-2.86c-0.52-0.7-1.24-1.05-2.17-1.05
+			c-0.93,0-1.65,0.35-2.17,1.05c-0.52,0.7-0.77,1.66-0.77,2.86c0,1.22,0.26,2.19,0.77,2.89c0.52,0.71,1.24,1.07,2.17,1.07
+			c0.93,0,1.65-0.36,2.17-1.07C468.14,15.39,468.4,14.42,468.4,13.2z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M477.01,19.27c-0.77-1.59-1.57-3.42-2.38-5.48s-1.55-4.27-2.22-6.64h2.99c0.17,0.68,0.37,1.41,0.59,2.19
+			c0.23,0.78,0.47,1.56,0.72,2.34c0.26,0.78,0.52,1.54,0.79,2.27c0.27,0.73,0.52,1.39,0.76,1.98c0.23-0.59,0.48-1.25,0.74-1.98
+			s0.52-1.49,0.78-2.27c0.25-0.78,0.5-1.56,0.73-2.34c0.23-0.78,0.43-1.51,0.61-2.19h2.89c-0.67,2.36-1.41,4.57-2.22,6.64
+			s-1.61,3.89-2.38,5.48H477.01z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M490.1,6.85c0.93,0,1.71,0.12,2.34,0.35c0.63,0.23,1.14,0.56,1.52,0.97c0.38,0.42,0.65,0.92,0.81,1.52
+			c0.16,0.59,0.24,1.25,0.24,1.96v7.34c-0.43,0.09-1.08,0.2-1.96,0.34s-1.86,0.2-2.95,0.2c-0.73,0-1.39-0.07-1.99-0.21
+			c-0.6-0.14-1.12-0.36-1.54-0.67c-0.42-0.31-0.76-0.71-1-1.2c-0.24-0.49-0.36-1.1-0.36-1.83c0-0.69,0.13-1.28,0.41-1.76
+			c0.27-0.48,0.64-0.87,1.1-1.17c0.46-0.3,1-0.52,1.61-0.65c0.61-0.13,1.25-0.2,1.91-0.2c0.31,0,0.63,0.02,0.97,0.06
+			c0.34,0.04,0.7,0.1,1.09,0.2v-0.46c0-0.32-0.04-0.63-0.12-0.93c-0.08-0.29-0.21-0.55-0.41-0.78c-0.19-0.22-0.45-0.4-0.76-0.52
+			c-0.32-0.12-0.71-0.19-1.19-0.19c-0.65,0-1.24,0.05-1.78,0.14c-0.54,0.09-0.98,0.2-1.32,0.33l-0.35-2.27
+			c0.35-0.12,0.87-0.25,1.55-0.37C488.61,6.92,489.33,6.85,490.1,6.85z M490.33,17.3c0.87,0,1.52-0.05,1.97-0.14v-3.1
+			c-0.15-0.05-0.38-0.09-0.67-0.14c-0.29-0.05-0.62-0.07-0.97-0.07c-0.31,0-0.62,0.02-0.94,0.07c-0.32,0.05-0.6,0.13-0.86,0.25
+			c-0.25,0.12-0.46,0.3-0.61,0.52c-0.15,0.22-0.23,0.51-0.23,0.85c0,0.66,0.21,1.12,0.63,1.38C489.06,17.17,489.62,17.3,490.33,17.3
+			z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M498.3,3.96l2.8-0.46v3.66h4.31V9.5h-4.31v4.93c0,0.97,0.15,1.67,0.46,2.08c0.31,0.42,0.83,0.63,1.58,0.63
+			c0.51,0,0.96-0.05,1.35-0.16c0.39-0.11,0.71-0.21,0.94-0.3l0.46,2.22c-0.32,0.14-0.75,0.28-1.27,0.43
+			c-0.53,0.15-1.14,0.22-1.85,0.22c-0.87,0-1.59-0.12-2.17-0.35c-0.58-0.23-1.04-0.57-1.38-1.01c-0.34-0.44-0.58-0.97-0.72-1.6
+			c-0.14-0.62-0.21-1.34-0.21-2.14V3.96z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M518.8,13.2c0,0.96-0.14,1.83-0.42,2.62c-0.28,0.79-0.67,1.46-1.18,2.01c-0.51,0.56-1.12,0.99-1.84,1.3
+			c-0.72,0.31-1.51,0.46-2.37,0.46s-1.65-0.15-2.36-0.46c-0.71-0.31-1.32-0.74-1.83-1.3s-0.91-1.23-1.19-2.01
+			c-0.29-0.79-0.43-1.66-0.43-2.62s0.14-1.83,0.43-2.61c0.29-0.78,0.69-1.45,1.2-2c0.52-0.56,1.13-0.98,1.84-1.29
+			c0.71-0.3,1.49-0.45,2.34-0.45s1.63,0.15,2.35,0.45c0.72,0.3,1.33,0.73,1.84,1.29c0.51,0.56,0.91,1.22,1.19,2
+			C518.66,11.38,518.8,12.24,518.8,13.2z M515.93,13.2c0-1.2-0.26-2.16-0.78-2.86c-0.52-0.7-1.24-1.05-2.17-1.05
+			c-0.93,0-1.65,0.35-2.17,1.05c-0.52,0.7-0.77,1.66-0.77,2.86c0,1.22,0.26,2.19,0.77,2.89c0.52,0.71,1.24,1.07,2.17,1.07
+			c0.93,0,1.65-0.36,2.17-1.07C515.67,15.39,515.93,14.42,515.93,13.2z"
+                      />
+                      <path
+                        style="fill: #0d0a21"
+                        d="M528.59,9.68c-0.23-0.08-0.55-0.16-0.96-0.24c-0.41-0.08-0.88-0.13-1.42-0.13c-0.31,0-0.64,0.03-0.98,0.09
+			c-0.35,0.06-0.59,0.12-0.73,0.16v9.7h-2.8V7.73c0.54-0.2,1.22-0.39,2.03-0.57c0.81-0.18,1.71-0.27,2.7-0.27
+			c0.18,0,0.4,0.01,0.65,0.03c0.25,0.02,0.49,0.05,0.74,0.09c0.25,0.04,0.49,0.08,0.72,0.14c0.23,0.05,0.42,0.1,0.56,0.15
+			L528.59,9.68z"
+                      />
+                    </g>
+                  </g>
+                </svg>
               </div>
             </div>
-            <div
-              style="
-                box-sizing: border-box;
-                border: 1px solid #32425f;
-                border-bottom: 10px solid #32425f;
-                width: 430px;
-                height: 240px;
-                min-width: 430px;
-                min-height: 240px;
-                display: flex;
-                flex-wrap: wrap;
-                -ms-flex-wrap: wrap;
-                -webkit-flex-wrap: wrap;
-                color: #32425f;
-                padding: 25px 25px 10px 25px;
-              "
-            >
-              <div style="margin-right: 10px">
-                <p
-                  style="
-                    font-size: 14px;
-                    font-family: '맑은 고딕';
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                    letter-spacing: 1px;
-                  "
-                >
-                  <span style="font-size: 22px; letter-spacing: 5px">
-                    {{ krName }}
-                  </span>
-                  {{ enName }}
-                </p>
-                <hr
-                  align="left"
-                  style="
-                    height: 1px;
-                    background-color: rgb(0, 0, 0);
-                    border: 0px;
-                    margin-top: 5px;
-                    margin-bottom: 5px;
-                  "
-                />
-                <p
-                  style="
-                    font-size: 13px;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                    font-family: '맑은 고딕';
-                  "
-                >
-                  {{ desc }}
-                </p>
-              </div>
-              <div style="margin-left: 10px">
-                <p
-                  style="
-                    font-size: 15px;
-                    font-family: '맑은 고딕';
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                    margin-top: 7px;
-                  "
-                >
-                  M. <a
-                    :href="`tel:${telNum}`"
-                    style="color: #32425f; text-decoration: none"
-                    >{{ telNum }}</a
-                  >
-                </p>
-                <p
-                  style="
-                    font-size: 15px;
-                    font-family: '맑은 고딕';
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                    margin-top: 3px;
-                  "
-                >
-                  E. <a
-                    :href="`mailto:${email}@xenoplex.kr`"
-                    style="color: #32425f; text-decoration: none"
-                    >{{ email }}@xenoplex.kr</a
-                  >
-                </p>
-              </div>
-              <div style="width: 100%; align-self: end">
-                <p
-                  style="
-                    font-size: 12px;
-                    font-family: '맑은 고딕';
-                    line-height: 150%;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                  "
-                >
-                  <b>제노플렉스</b>
-                </p>
-                <p
-                  style="
-                    font-size: 12px;
-                    font-family: '맑은 고딕';
-                    line-height: 150%;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                  "
-                >
-                  <b>본사</b>. 대구광역시 동구 경대로 36, 무지개빌딩 6층
-                </p>
-                <p
-                  style="
-                    font-size: 12px;
-                    font-family: '맑은 고딕';
-                    line-height: 150%;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                  "
-                >
-                  <b>플랫폼센터</b>. 서울특별시 송파구 정의로 70 KDU타워 705호
-                </p>
-                <p
-                  style="
-                    font-size: 12px;
-                    font-family: '맑은 고딕';
-                    line-height: 150%;
-                    margin-top: 0px;
-                    margin-bottom: 0px;
-                  "
-                >
-                  <span style="font-size: 13px">
-                    T. <a
-                      href="tel:070-8658-0670"
-                      style="color: #32425f; text-decoration: none"
-                      >070-8656-0670</a
-                    > | E. <a
-                      href="mailto:contact@xenoplex.kr"
-                      style="color: #32425f; text-decoration: none"
-                      >contact@xenoplex.kr</a
-                    > | <a
-                      href="https://xenoplex.co.kr"
-                      style="color: #32425f; text-decoration: none"
-                      >xenoplex.co.kr</a>
-                  </span>
-                </p>
-              </div>
-            </div>
+            <p style="clear: both; line-height: 2">
+              {{ part }}
+            </p>
+            <p style="text-align: left"><br /></p>
+            <p style="text-align: left">
+              <span style="color: rgb(0, 150, 255); font-weight: bold">M</span>&nbsp;
+              <a :href="`tel:${telNum}`">{{ telNum }}</a>
+              <span style="color: #ccc">&nbsp;|&nbsp;</span>
+              <span style="color: rgb(0, 150, 255); font-weight: bold">T</span>&nbsp;
+              <a :href="`tel:${officeCall}`">{{ officeCall }}</a>
+              <span style="color: #ccc">&nbsp;|&nbsp;</span>
+              <span style="color: rgb(0, 150, 255); font-weight: bold">F</span>&nbsp;02-401-7439
+            </p>
+            <p style="text-align: left">
+              <span style="color: rgb(0, 150, 255); font-weight: bold">W</span>&nbsp;
+              <a href="https://dxworks.kr">dxworks.kr</a>
+              <span style="color: #ccc">&nbsp;|&nbsp;</span>
+              <span style="color: rgb(0, 150, 255); font-weight: bold">E</span>&nbsp;
+              <a :href="`mailto:${email}@dxworks.kr`">{{ `${email}@dxworks.kr` }}</a>
+            </p>
+            <p style="text-align: left">
+              <span style="color: rgb(0, 150, 255); font-weight: bold">A</span>&nbsp;41196) 대구광역시
+              동구 경대로 36, 무지개빌딩 6층
+            </p>
+            <p style="text-align: left">
+              <span style="color: rgb(0, 150, 255); font-weight: bold">A</span>&nbsp;05854) 서울특별시
+              송파구 법원로 128. SK V1 메트로시티 C동 1505호
+            </p>
           </div>
         </q-card-section>
       </q-card>
 
       <q-card class="col">
         <q-card-section class="flex justify-between items-center">
-          <span class="text-h6"> 경량화 코드 </span>
+          <span class="text-h6"> 경량화 코드</span>
           <q-icon
             class="q-field__focusable-action"
             type="button"
@@ -306,7 +416,7 @@
   </q-page>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { defineComponent, ref, watch, onMounted } from "vue";
 import IMEInput from "src/components/IME/IMEInput";
 import "highlight.js/lib/common";
@@ -314,76 +424,58 @@ import hljsVuePlugin from "@highlightjs/vue-plugin";
 import { useQuasar } from "quasar";
 // const minify = require('html-minifier').minify;
 
-export default defineComponent({
-  name: "IndexPage",
-  components: {
-    IMEInput,
-    highlightjs: hljsVuePlugin.component,
-  },
-  setup() {
-    const $q = useQuasar();
+const highlightjs = hljsVuePlugin.component;
 
-    const krName = ref("신규현");
-    const enName = ref("Tom Shin");
-    const desc = ref("Software Development Engineer");
-    const telNum = ref("010-8905-7546");
-    const email = ref("tom.shin");
+const $q = useQuasar();
 
-    const minifyCode = ref("");
+const krName = ref("신규현");
+const enName = ref("Tom Shin");
+const desc = ref("Junior Software Developer");
+const part = ref("Software Development Group");
+const telNum = ref("010-8905-7546");
+const email = ref("tom.shin");
+const officeCall = ref('070-8846-9136')
 
-    const hasClipboard = ref(!!navigator.clipboard);
+const minifyCode = ref("");
 
-    function updateCode() {
-      minifyCode.value = document.getElementById("preview")?.innerHTML || "";
-    }
+const hasClipboard = ref(!!navigator.clipboard);
 
-    function copyCodeToClip() {
-      navigator.clipboard
-        .writeText(minifyCode.value)
-        .then(() => {
-          $q.notify({
-            message: "복사 성공!!",
-            color: "green",
-            icon: "done_all",
-          });
-        })
-        .catch(() => {
-          $q.notify({
-            message: "복사 실패!! 반복적으로 실패 시 담당자에게 문의해주세요.",
-            color: "red",
-            icon: "sentiment_very_dissatisfied",
-          });
-        });
-    }
+function updateCode() {
+  minifyCode.value = document.getElementById("preview")?.innerHTML || "";
+}
 
-    onMounted(() => {
-      updateCode();
+function copyCodeToClip() {
+  navigator.clipboard
+    .writeText(minifyCode.value)
+    .then(() => {
+      $q.notify({
+        message: "복사 성공!!",
+        color: "green",
+        icon: "done_all",
+      });
+    })
+    .catch(() => {
+      $q.notify({
+        message: "복사 실패!! 반복적으로 실패 시 담당자에게 문의해주세요.",
+        color: "red",
+        icon: "sentiment_very_dissatisfied",
+      });
     });
+}
 
-    watch(
-      () => [krName, enName, desc, telNum, email],
-      () => {
-        updateCode();
-      },
-      {
-        deep: true,
-      }
-    );
-
-    return {
-      krName,
-      enName,
-      desc,
-      telNum,
-      email,
-      minifyCode,
-      hasClipboard,
-
-      //functions
-      copyCodeToClip,
-    };
-  },
+onMounted(() => {
+  updateCode();
 });
+
+watch(
+  () => [krName, enName, desc, telNum, email],
+  () => {
+    updateCode();
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 
 <style lang="sass">
@@ -396,4 +488,7 @@ export default defineComponent({
   white-space: pre-line
   max-height: 300px
   overflow-y: auto
+
+p
+  margin: 0
 </style>

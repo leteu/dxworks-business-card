@@ -1,6 +1,6 @@
-# xenoplex-card (xenoplex-card)
+# dxworks-business-card (dxworks-business-card)
 
-auto creating xenoplex business card
+auto creating dxworks business card
 
 ## Install the dependencies
 ```bash
