@@ -4,7 +4,7 @@
     <q-header elevated class="bg-primary text-white">
       <q-toolbar>
         <q-toolbar-title>
-          제노플랙스 명함 제조기
+          DXWorks 명함 제조기
         </q-toolbar-title>
         <q-space />
         <span class="text-body2 text-weight-bold">v{{version}}</span>
